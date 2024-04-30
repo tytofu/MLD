@@ -1,5 +1,4 @@
 #ifndef _TOFU_MLD_
-#include <cstdlib>
 #include <assert.h>
 
 #define MAX_STRUCTURE_NAME_SZIE 128
@@ -64,6 +63,8 @@ void print_structure_db(struct_db_t *struct_db);
 /*Fn to add the structure record in a structure database*/
 int add_structure_to_struct_db(struct_db_t *struct_db,
                                struct_db_rec_t *struct_rec);
+/*Find the struct record for the second parameter*/
+struct_db_rec_t * struct_db_look_up(struct_db_t *struct_db,char *struct_name);
 /*Structure Registration helping APIs*/
 
 #define FIELD_INFO(struct_name, fld_name, dtype, nested_struct_name)           \
