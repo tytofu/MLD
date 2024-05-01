@@ -44,4 +44,12 @@ int main () {
   REG_STRUCT(struct_db,student_t,student_fields)
   print_structure_db(struct_db);
   printf("student_t is %p\n",struct_db_look_up(struct_db, "student_t"));
+  /*初始化一个对象数据库*/
+  object_db_t *object_db = calloc(1, sizeof(object_db_t));
+  object_db->count = 0;
+  object_db->struct_db = struct_db;//需要进行初始化,第二个错误
+  student_t *student_s1 = xcalloc(object_db, "student_t", 1);
+  student_t *student_s2 = xcalloc(object_db, "student_t", 1);
+  emp_t *emp_e1 = xcalloc(object_db, "emp_t", 1);
+  print_object_db(object_db);
 }
