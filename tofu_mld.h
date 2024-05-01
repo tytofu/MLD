@@ -84,4 +84,25 @@ struct_db_rec_t * struct_db_look_up(struct_db_t *struct_db,char *struct_name);
       assert(0);                                                               \
     }                                                                          \
   } while (0);
+
+/*Object Database structure definition Starts here*/
+typedef struct _object_db_rec_ object_db_rec_t;
+struct _object_db_rec_{
+  object_db_rec_t *next;
+  void *ptr;/*key store address object*/
+  unsigned int units;
+  struct_db_rec_t *struct_rec;
+};
+typedef struct _object_db_ {
+  struct_db_t *struct_db;
+  object_db_rec_t *head;
+  unsigned int count;
+}object_db_t;
+
+/*Dumping functions*/
+void print_object_rec(object_db_rec_t *object_rec,int i);
+void print_object_db(object_db_t *object_db);
+object_db_rec_t *object_db_look_up(object_db_t *object_db,object_db_rec_t *ptr);
+/*API to malloc the object*/
+void * xcalloc(object_db_t *object_db,char *struct_name,int units);
 #endif // !_TOFU_MLD_
