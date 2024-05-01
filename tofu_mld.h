@@ -63,7 +63,7 @@ void print_structure_db(struct_db_t *struct_db);
 /*Fn to add the structure record in a structure database*/
 int add_structure_to_struct_db(struct_db_t *struct_db,
                                struct_db_rec_t *struct_rec);
-/*Find the struct record for the second parameter*/
+/*work:Find the struct record for the second parameter*/
 struct_db_rec_t * struct_db_look_up(struct_db_t *struct_db,char *struct_name);
 /*Structure Registration helping APIs*/
 
@@ -102,7 +102,10 @@ typedef struct _object_db_ {
 /*Dumping functions*/
 void print_object_rec(object_db_rec_t *object_rec,int i);
 void print_object_db(object_db_t *object_db);
-object_db_rec_t *object_db_look_up(object_db_t *object_db,object_db_rec_t *ptr);
+object_db_rec_t *object_db_look_up(object_db_t *object_db,void *ptr);
+/*work:打印函数参数所对应的对象的每个字段的值*/
+void mld_dump_object_rec_detail(object_db_rec_t *object_db_rec);
 /*API to malloc the object*/
 void * xcalloc(object_db_t *object_db,char *struct_name,int units);
+void xfree(object_db_t *object_db,void *ptr);
 #endif // !_TOFU_MLD_

@@ -2,6 +2,7 @@
 #include <memory.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 /*Application Structures*/
 
@@ -49,7 +50,17 @@ int main () {
   object_db->count = 0;
   object_db->struct_db = struct_db;//需要进行初始化,第二个错误
   student_t *student_s1 = xcalloc(object_db, "student_t", 1);
-  student_t *student_s2 = xcalloc(object_db, "student_t", 1);
-  emp_t *emp_e1 = xcalloc(object_db, "emp_t", 1);
+  student_s1->best_colleage = NULL;
+  student_s1->age = 20;
+  student_s1->rollno = 22;
+  student_s1->aggregate = 98.21;
+  strncpy(student_s1->stud_name, "tofu", strlen("tofu"));
+  // student_t *student_s2 = xcalloc(object_db, "student_t", 1);
+  // emp_t *emp_e1 = xcalloc(object_db, "emp_t", 1);
   print_object_db(object_db);
+  mld_dump_object_rec_detail(object_db->head);
+  printf("%d\n",object_db->count);
+  xfree(object_db, student_s1);
+  printf("%d\n",object_db->count);
+  // mld_dump_object_rec_detail(object_db->head);
 }
