@@ -49,18 +49,40 @@ int main () {
   object_db_t *object_db = calloc(1, sizeof(object_db_t));
   object_db->count = 0;
   object_db->struct_db = struct_db;//需要进行初始化,第二个错误
-  student_t *student_s1 = xcalloc(object_db, "student_t", 1);
-  student_s1->best_colleage = NULL;
-  student_s1->age = 20;
-  student_s1->rollno = 22;
-  student_s1->aggregate = 98.21;
-  strncpy(student_s1->stud_name, "tofu", strlen("tofu"));
-  // student_t *student_s2 = xcalloc(object_db, "student_t", 1);
-  // emp_t *emp_e1 = xcalloc(object_db, "emp_t", 1);
+  //-----------------student_s1------------------------------
+  student_t *student_s1 = xcalloc(object_db, "student_t", 2);
+  student_s1[0].best_colleage = NULL;
+  student_s1[0].age = 20;
+  student_s1[0].rollno = 22;
+  student_s1[0].aggregate = 98.21;
+  strncpy(student_s1[0].stud_name, "tofu", strlen("tofu"));
+  student_s1[1].best_colleage = NULL;
+  student_s1[1].age = 21;
+  student_s1[1].rollno = 23;
+  student_s1[1].aggregate = 100.1;
+  strncpy(student_s1[1].stud_name, "tytofu", strlen("tytofu"));
+  student_t *student_s2 = xcalloc(object_db, "student_t", 1);
+  student_s2->best_colleage = NULL;
+  student_s2->age = 21;
+  student_s2->rollno = 23;
+  student_s2->aggregate = 99.10;
+  strncpy(student_s2->stud_name, "wangshuai", strlen("wangshuai"));
+  emp_t *emp_e1 = xcalloc(object_db, "emp_t", 1);
+  emp_e1->age = 22;
+  emp_e1->mgr = NULL;
+  emp_e1->emp_id = 1;
+  emp_e1->salary = 24;
+  strncpy(emp_e1->emp_name, "huamengjun", strlen("huamengjun"));
   print_object_db(object_db);
-  mld_dump_object_rec_detail(object_db->head);
+  //输出此结构体堆对象中各个成员的信息.完成这个项目之后,可以对这个函数进行重写,改变参数为ptr,对用户
+  //使用更加友好
+  mld_dump_object_rec_detail(object_db_look_up(object_db, student_s1),"student_s1");
+  mld_dump_object_rec_detail(object_db_look_up(object_db, student_s2),"student_s2");
+  mld_dump_object_rec_detail(object_db_look_up(object_db, emp_e1),"emp_e1");
   printf("%d\n",object_db->count);
   xfree(object_db, student_s1);
+  xfree(object_db, student_s2);
+  xfree(object_db,emp_e1);
   printf("%d\n",object_db->count);
   // mld_dump_object_rec_detail(object_db->head);
 }
