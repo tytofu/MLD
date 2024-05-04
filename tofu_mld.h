@@ -104,7 +104,7 @@ void print_object_rec(object_db_rec_t *object_rec,int i);
 void print_object_db(object_db_t *object_db);
 object_db_rec_t *object_db_look_up(object_db_t *object_db,void *ptr);
 /*work:打印函数参数所对应的对象的每个字段的值*/
-void mld_dump_object_rec_detail(object_db_rec_t *object_db_rec);
+void mld_dump_object_rec_detail(object_db_rec_t *object_db_rec,const char *struct_ptr_name);
 /*API to malloc the object*/
 void * xcalloc(object_db_t *object_db,char *struct_name,int units);
 void xfree(object_db_t *object_db,void *ptr);

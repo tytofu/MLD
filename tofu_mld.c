@@ -168,7 +168,7 @@ void print_object_db(object_db_t *object_db) {
     print_object_rec(head, number++);
   }
 }
-void mld_dump_object_rec_detail(object_db_rec_t *object_db_rec) {
+void mld_dump_object_rec_detail(object_db_rec_t *object_db_rec,const char *struct_ptr_name) {
   assert(object_db_rec);
   void *ptr = object_db_rec->ptr; // 申请动态内存的基地址
   field_info_t *fields =
@@ -184,43 +184,43 @@ void mld_dump_object_rec_detail(object_db_rec_t *object_db_rec) {
     for (int i = 0; i < object_db_rec->struct_rec->n_fields; i++) {
       switch (fields[i].dtype) {
       case UINT8: {
-        printf("%s[%d]->%s = %hhd\n", object_db_rec->struct_rec->struct_name,
+        printf("%s[%d]->%s = %hhd\n", struct_ptr_name,
                object_index, object_db_rec->struct_rec->fields[i].fname,
                *((unsigned char *)(ptr + fields[i].offset)));
         break;
       }
       case UINT32: {
-        printf("%s[%d]->%s = %u\n", object_db_rec->struct_rec->struct_name,
+        printf("%s[%d]->%s = %u\n", struct_ptr_name,
                object_index, object_db_rec->struct_rec->fields[i].fname,
                *((unsigned int *)(ptr + fields[i].offset)));
         break;
       }
       case INT32: {
-        printf("%s[%d]->%s = %d\n", object_db_rec->struct_rec->struct_name,
+        printf("%s[%d]->%s = %d\n", struct_ptr_name,
                object_index, object_db_rec->struct_rec->fields[i].fname,
                *((int *)(ptr + fields[i].offset)));
       }
       case CHAR: {
-        printf("%s[%d]->%s = %s\n", object_db_rec->struct_rec->struct_name,
+        printf("%s[%d]->%s = %s\n", struct_ptr_name,
                object_index, object_db_rec->struct_rec->fields[i].fname,
                (char *)(ptr + fields[i].offset));
         break;
       }
       case FLOAT: {
-        printf("%s[%d]->%s = %f\n", object_db_rec->struct_rec->struct_name,
+        printf("%s[%d]->%s = %f\n", struct_ptr_name,
                object_index, object_db_rec->struct_rec->fields[i].fname,
                *((float *)(ptr + fields[i].offset)));
         break;
       }
       case DOUBLE: {
-        printf("%s[%d]->%s = %f\n", object_db_rec->struct_rec->struct_name,
+        printf("%s[%d]->%s = %f\n", struct_ptr_name,
                object_index, object_db_rec->struct_rec->fields[i].fname,
                *((double *)(ptr + fields[i].offset)));
         break;
       }
       case OBJ_PTR:
       case OBJ_STRUCT: {
-        printf("%s[%d]->%s = %s\n", object_db_rec->struct_rec->struct_name,
+        printf("%s[%d]->%s = %s\n", struct_ptr_name,
                object_index, object_db_rec->struct_rec->fields[i].fname, "nil");
         break;
       }
@@ -249,7 +249,7 @@ void xfree(object_db_t *object_db, void *ptr) {
   object_db_rec_t *head = object_db->head;
   // 1.删除对象记录
   // 如果此对象记录是链表中的第一条记录,也就是头指针指向此对象记录
-  if (head == object_db_rec) {
+  if (head == object_db_rec) { //这里可以做一个优化,创建一个虚拟头节点
     head = object_db_rec->next; // 直接指向此对象记录的下一个对象记录删除此对象
     object_db->count--;
   } else {
