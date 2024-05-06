@@ -114,7 +114,7 @@ object_db_rec_t *object_db_look_up(object_db_t *object_db, void *ptr) {
   return NULL;
 }
 static void add_object_to_object_db(object_db_t *object_db, void *ptr,
-                                    int units, struct_db_rec_t *struct_db_rec) {
+                                    int units, struct_db_rec_t *struct_db_rec,mld_boolean_t is_root) {
   /*检测对象数据库中是否已有ptr的对象记录*/
   object_db_rec_t *obj_rec = object_db_look_up(object_db, ptr);
   /*如果能找到,则不添加,使用断言报错*/
@@ -126,6 +126,7 @@ static void add_object_to_object_db(object_db_t *object_db, void *ptr,
   obj_rec->ptr = ptr;
   obj_rec->units = units;
   obj_rec->struct_rec = struct_db_rec;
+  obj_rec->is_root = is_root;
   if (object_db->count == 0) {
     object_db->head = obj_rec;
     obj_rec->next = NULL;
@@ -265,4 +266,21 @@ void xfree(object_db_t *object_db, void *ptr) {
   free(ptr);
   // 3. 释放ptr所在的对象记录的堆空间
   free(object_db_rec);
+}
+/*The global object of the application which is not created by xcalloc show be registered with
+ * MLD using below API*/
+void mld_register_global_as_root(object_db_t *object_db, void *objptr, char *struct_name, unsigned int units){
+  //通过结构体名称获取结构体记录地址
+  struct_db_rec_t *struct_db_rec = struct_db_look_up(object_db->struct_db, struct_name);
+  //创建一个新的对象记录添加到对象数据库中
+  add_object_to_object_db(object_db, objptr, units, struct_db_rec, MLD_TRUE);
+}
+
+/*Application might create an object using xcalloc,but at the same time the object can be root
+ * object.Use this API to override the object flags for the object already preet in object db*/
+void mld_set_dynamic_object_as_root(object_db_t *object_db, void *obj_ptr) {
+  //通过obj_ptr找到已分配的对象记录地址
+  object_db_rec_t *object_db_rec = object_db_look_up(object_db, obj_ptr);
+  //设置此对象记录中的is_root为MLD_TRUE
+  object_db_rec->is_root = MLD_TRUE;
 }
