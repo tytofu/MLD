@@ -22,7 +22,11 @@ typedef enum {
   DOUBLE,
   OBJ_STRUCT
 } data_type_t;
-
+/*Enumeration for bool types*/
+typedef enum {
+  MLD_FALSE,
+  MLD_TRUE
+}mld_boolean_t;
 // Descibe Data
 typedef struct _struct_db_rec_t struct_db_rec_t;
 
@@ -92,6 +96,8 @@ struct _object_db_rec_{
   void *ptr;/*key store address object*/
   unsigned int units;
   struct_db_rec_t *struct_rec;
+  mld_boolean_t is_visited;/*Used for Graph traversal -- 用于图遍历的条件*/
+  mld_boolean_t is_root;/*Is this object root object?*/
 };
 typedef struct _object_db_ {
   struct_db_t *struct_db;
@@ -105,7 +111,12 @@ void print_object_db(object_db_t *object_db);
 object_db_rec_t *object_db_look_up(object_db_t *object_db,void *ptr);
 /*work:打印函数参数所对应的对象的每个字段的值*/
 void mld_dump_object_rec_detail(object_db_rec_t *object_db_rec,const char *struct_ptr_name);
-/*API to malloc the object*/
+/*API to malloc and free the object*/
 void * xcalloc(object_db_t *object_db,char *struct_name,int units);
 void xfree(object_db_t *object_db,void *ptr);
+/*APIs to register root objects*/
+/*Not use xcalloc*/
+void mld_register_global_as_root(object_db_t *object_db,void *objptr,char *struct_name,unsigned int units);
+/*Use xcalloc*/
+void mld_set_dynamic_object_as_root(object_db_t *object_db,void *obj_ptr);
 #endif // !_TOFU_MLD_
