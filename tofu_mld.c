@@ -145,19 +145,19 @@ void *xcalloc(object_db_t *object_db, char *struct_name, int units) {
   // 创建的结构体数据库的值赋值给对象数据库中的struct_db成员.
   assert(struct_db_rec);
   void *ptr = calloc(units, struct_db_rec->ds_size);
-  add_object_to_object_db(object_db, ptr, units, struct_db_rec);
+  add_object_to_object_db(object_db, ptr, units, struct_db_rec,MLD_FALSE);
   return ptr;
 }
 void print_object_rec(object_db_rec_t *object_rec, int i) {
   if (!object_rec)
     return;
   printf("---------------------------------------------------------------------"
-         "------------------|\n");
-  printf("%d ptr = %-15p | next = %-15p | unit = %-2d | struct_name = %-9s |\n",
+         "------------------------------------|\n");
+  printf("%d ptr = %-15p | next = %-15p | unit = %-2d | struct_name = %-9s | is_root = %-5s |\n",
          i, object_rec->ptr, object_rec->next, object_rec->units,
-         object_rec->struct_rec->struct_name);
+         object_rec->struct_rec->struct_name,object_rec->is_root ? "TRUE" : "FALSE");
   printf("---------------------------------------------------------------------"
-         "------------------|\n");
+         "------------------------------------|\n");
 }
 void print_object_db(object_db_t *object_db) {
   if (!object_db)
@@ -169,7 +169,7 @@ void print_object_db(object_db_t *object_db) {
     print_object_rec(head, number++);
   }
 }
-void mld_dump_object_rec_detail(object_db_rec_t *object_db_rec,const char *struct_ptr_name) {
+void mld_dump_object_rec_detail(object_db_rec_t *object_db_rec,const char *struct_ptr_name) {//这个是重点
   assert(object_db_rec);
   void *ptr = object_db_rec->ptr; // 申请动态内存的基地址
   field_info_t *fields =
